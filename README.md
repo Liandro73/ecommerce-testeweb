@@ -1,6 +1,6 @@
 # Início Rápido em Teste de Software - Iterasys
 
-Curso introdtório a Automação de Testes Web
+Curso introdutório a Automação de Testes Web
 
 * Ferramentas para Desenvolvimento
   * GIT
