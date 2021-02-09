@@ -25,3 +25,7 @@ Curso introdutório a Automação de Testes Web
 ### Importando o projeto no Eclipse
 
 Após a configuração do ambiente, clonar esse projeto e importa-lo como Maven Project no Eclipse
+
+Rodar Testes utilizando o JUnit!
+
+*	[SITE](https://marcelodebittencourt.com/demoprestashop/) utilizado para o Treinamento!
