@@ -8,6 +8,7 @@ Curso introdutório a Automação de Testes Web
   * Maven
   * JUnit
   * Selenium
+  * Cucumber
   * Hamcrest
 
 ## Requisitos
@@ -18,6 +19,7 @@ Curso introdutório a Automação de Testes Web
 * [ECLIPSE](https://www.eclipse.org/downloads/) - Ferramenta para o Desenvolvimento 
 * [JUNIT](https://junit.org/junit5/) - Ferramenta com estrutura de Teste amigável ao programador para Java e JVM
 * [SELENIUM](https://www.selenium.dev/) - Ferramenta para automatizar aplicativos da web para fins de Teste
+* [CUCUMBER](https://cucumber.io/) - Ferramenta de Behavior Driven Development (BDD)
 * [HAMCREST](http://hamcrest.org/) - Ferramenta que auxilia na criação de expressões flexíveis
 
 ## Uso
@@ -25,3 +27,7 @@ Curso introdutório a Automação de Testes Web
 ### Importando o projeto no Eclipse
 
 Após a configuração do ambiente, clonar esse projeto e importa-lo como Maven Project no Eclipse
+
+Rodar Testes utilizando o JUnit!
+
+*	[SITE](https://marcelodebittencourt.com/demoprestashop/) utilizado para o Treinamento!
