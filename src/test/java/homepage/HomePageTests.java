@@ -1,5 +1,11 @@
 package homepage;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.util.List;
+
 import org.junit.jupiter.api.Test;
 
 import base.BaseTests;
@@ -7,17 +13,13 @@ import pages.LoginPage;
 import pages.ModalProdutoPage;
 import pages.ProdutoPage;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
-import java.util.List;
-
 public class HomePageTests extends BaseTests {
 	
 	LoginPage loginPage;
 	ProdutoPage produtoPage;
 	ModalProdutoPage modalProdutoPage;
+	String nomeProduto_HomePage;
+	
 	
 	@Test
 	public void testContarProdutos_oitoProdutosDiferentes( ) {
@@ -34,7 +36,7 @@ public class HomePageTests extends BaseTests {
 	@Test
 	public void testValidarDetalhesDoProduto_DescricaoEValorIguas() {
 		int indice = 0;
-		String nomeProduto_HomePage = homePage.obterNomeProduto(indice);
+		nomeProduto_HomePage = homePage.obterNomeProduto(indice);
 		String precoProduto_HomePage = homePage.obterPrecoProduto(indice);
 		
 		produtoPage = homePage.clicarProduto(indice);
@@ -66,6 +68,12 @@ public class HomePageTests extends BaseTests {
 	
 	@Test
 	public void incluirProdutoNoCarrinho_ProdutoIncluidoComSucesso() {
+		
+		String tamanhoProduto = "M";
+		String corProduto = "Black";
+		int quantidadeProduto = 2;
+		
+		
 		//Usuário logado
 		if (!homePage.estaLogado("Macelo Bittencourt")) {
 			testLoginComSucesso_UsuarioLogado();
@@ -77,7 +85,7 @@ public class HomePageTests extends BaseTests {
 		//Selecionar tamanho
 		List<String> listaOpcoes = produtoPage.obterOpcoesSelecionadas();
 		
-		produtoPage.selecionarOpcaoDropDown("M");
+		produtoPage.selecionarOpcaoDropDown(tamanhoProduto);
 		
 		listaOpcoes = produtoPage.obterOpcoesSelecionadas();
 		
@@ -87,13 +95,32 @@ public class HomePageTests extends BaseTests {
 		produtoPage.selecionarCorPreta();
 		
 		//Selecionar quantidade
-		produtoPage.alterarQuantidade(2);
+		produtoPage.alterarQuantidade(quantidadeProduto);
 		
 		//Adicionar ao carrinho
 		modalProdutoPage = produtoPage.cliclarBotaoAddToCart();
 		
-//		assertThat(modalProdutoPage.obterMensagemProdutoAdicionado(), is("Product successfully added to your shopping cart"));
+		//Validações
 		assertTrue(modalProdutoPage.obterMensagemProdutoAdicionado().endsWith("Product successfully added to your shopping cart"));
+		
+		assertThat(modalProdutoPage.obterDescricaoProduto().toUpperCase(), is(nomeProduto_HomePage.toUpperCase()));
+		
+		String precoProdutoString = modalProdutoPage.obterPrecoProduto();
+		precoProdutoString = precoProdutoString.replace("$", "");
+		Double precoProduto = Double.parseDouble(precoProdutoString);
+		
+		assertThat(modalProdutoPage.obterTamanhoProduto(), is(tamanhoProduto));
+		assertThat(modalProdutoPage.obterCorProduto(), is(corProduto));
+		assertThat(modalProdutoPage.obterQuantidadeProduto(), is(Integer.toString(quantidadeProduto)));
+		
+		String subtotalString = modalProdutoPage.obterSubtotal();
+		subtotalString = subtotalString.replace("$", "");
+		Double subtotal = Double.parseDouble(subtotalString);
+		
+		Double subtotalCalculado = quantidadeProduto * precoProduto;
+		
+		assertThat(subtotal, is(subtotalCalculado));
+		
 	}
 
 }
