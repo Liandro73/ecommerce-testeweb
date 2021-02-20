@@ -13,6 +13,7 @@ import pages.CarrinhoPage;
 import pages.CheckoutPage;
 import pages.LoginPage;
 import pages.ModalProdutoPage;
+import pages.PedidoPage;
 import pages.ProdutoPage;
 import util.Funcoes;
 
@@ -23,9 +24,12 @@ public class HomePageTests extends BaseTests {
 	ModalProdutoPage modalProdutoPage;
 	CarrinhoPage carrinhoPage;
 	CheckoutPage checkoutPage;
+	PedidoPage pedidoPage;
 	
 	String nomeProduto_HomePage;
 	String nomeCliente = "Marcelo Bittencourt";
+	String emailCliente = "marcelo@teste.com";
+	String senhaCliente = "marcelo";
 	
 	@Test
 	public void testContarProdutos_oitoProdutosDiferentes( ) {
@@ -60,8 +64,8 @@ public class HomePageTests extends BaseTests {
 		loginPage = homePage.clicarBotaoSignIn();
 		
 		//Preencher usuário e senha
-		loginPage.preencherEmail("marcelo@teste.com");
-		loginPage.preencherSenha("marcelo");
+		loginPage.preencherEmail(emailCliente);
+		loginPage.preencherSenha(senhaCliente);
 		
 		//Clicar no botão Sign In para logar
 		loginPage.clicarBotaoSignIn();
@@ -157,7 +161,7 @@ public class HomePageTests extends BaseTests {
 		assertThat(Integer.parseInt(carrinhoPage.obter_input_quantidadeProduto()), is(esperado_input_quantidadeProduto));
 		assertThat(Funcoes.removeCifraoDevolveDouble(carrinhoPage.obter_subtotalProduto()), is(esperado_subtotalProduto));
 		
-		assertThat(Funcoes.removeTextItemsDevolveInt(carrinhoPage.obter_numeroItensTotal()), is(esperado_numeroItensTotal));
+		assertThat(Integer.parseInt(Funcoes.removeTexoPrefixoDevolveInt(carrinhoPage.obter_numeroItensTotal(), " items")), is(esperado_numeroItensTotal));
 		assertThat(Funcoes.removeCifraoDevolveDouble(carrinhoPage.obter_subtotalTotal()), is(esperado_subtotalTotal));
 		assertThat(Funcoes.removeCifraoDevolveDouble(carrinhoPage.obter_freteTotal()), is(esperado_freteTotal));
 		assertThat(Funcoes.removeCifraoDevolveDouble(carrinhoPage.obter_totalTaxExclTotal()), is(esperado_totalTaxExclTotal));
@@ -212,6 +216,23 @@ public class HomePageTests extends BaseTests {
 		//Clicar na opção "I agree"
 		checkoutPage.selecionarCheckboxIAgree();
 		checkoutPage.checkboxIAgreeSelecionado();
+	}
+	
+	@Test
+	public void finalizarPedido_pedidoFinalizadoComSucesso() {
+		//Checkout completamente concluído
+		testIrParaCheckout_FreteMeioPagamentoEnderecoListadosOk();
+		
+		//Teste
+		//Clicar no botão para confirmar o pedido
+		pedidoPage = checkoutPage.clicarBotaoConfirmaPedido();
+		
+		//Validar valores na tela
+		assertTrue(pedidoPage.obter_textoPedidoConfirmado().endsWith("YOUR ORDER IS CONFIRMED"));
+		assertThat(pedidoPage.obter_email(), is(emailCliente));
+		assertThat(pedidoPage.obter_totalProdutos(), is(esperado_subtotalProduto));
+		assertThat(pedidoPage.obter_metodoPagamento(), is("check"));
+		
 	}
 
 }
