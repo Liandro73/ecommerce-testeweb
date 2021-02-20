@@ -2,7 +2,6 @@ package homepage;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
@@ -11,6 +10,7 @@ import org.junit.jupiter.api.Test;
 
 import base.BaseTests;
 import pages.CarrinhoPage;
+import pages.CheckoutPage;
 import pages.LoginPage;
 import pages.ModalProdutoPage;
 import pages.ProdutoPage;
@@ -22,8 +22,10 @@ public class HomePageTests extends BaseTests {
 	ProdutoPage produtoPage;
 	ModalProdutoPage modalProdutoPage;
 	CarrinhoPage carrinhoPage;
-	String nomeProduto_HomePage;
+	CheckoutPage checkoutPage;
 	
+	String nomeProduto_HomePage;
+	String nomeCliente = "Marcelo Bittencourt";
 	
 	@Test
 	public void testContarProdutos_oitoProdutosDiferentes( ) {
@@ -65,13 +67,13 @@ public class HomePageTests extends BaseTests {
 		loginPage.clicarBotaoSignIn();
 		
 		//Validar se o usuário está logado de fato
-		assertThat(homePage.estaLogado("Marcelo Bittencourt"), is(true));
+		assertThat(homePage.estaLogado(nomeCliente), is(true));
 		
 		carregarPaginaInicial();
 	}
 	
 	@Test
-	public void incluirProdutoNoCarrinho_ProdutoIncluidoComSucesso() {
+	public void testIncluirProdutoNoCarrinho_ProdutoIncluidoComSucesso() {
 		
 		String tamanhoProduto = "M";
 		String corProduto = "Black";
@@ -79,7 +81,7 @@ public class HomePageTests extends BaseTests {
 		
 		
 		//Usuário logado
-		if (!homePage.estaLogado("Macelo Bittencourt")) {
+		if (!homePage.estaLogado(nomeCliente)) {
 			testLoginComSucesso_UsuarioLogado();
 		}
 		
@@ -138,9 +140,9 @@ public class HomePageTests extends BaseTests {
 	Double esperado_taxasTotal = 0.00;
 	
 	@Test
-	public void irParaCarrinho_InformacoesPersistidas() {
+	public void testIrParaCarrinho_InformacoesPersistidas() {
 		//Produto incluído na tela ModalProdutoPage
-		incluirProdutoNoCarrinho_ProdutoIncluidoComSucesso();
+		testIncluirProdutoNoCarrinho_ProdutoIncluidoComSucesso();
 		
 		carrinhoPage = modalProdutoPage.clicarBotaoPreoceedToCheckout();
 		
@@ -163,6 +165,7 @@ public class HomePageTests extends BaseTests {
 		assertThat(Funcoes.removeCifraoDevolveDouble(carrinhoPage.obter_taxasTotal()), is(esperado_taxasTotal));
 		
 		//Asserções JUnit
+		/*
 		assertEquals(carrinhoPage.obter_nomeProduto(), esperado_nomeProduto);
 		assertEquals(Funcoes.removeCifraoDevolveDouble(carrinhoPage.obter_precoProduto()), esperado_precoProduto);
 		assertEquals(carrinhoPage.obter_tamanhoProduto(), esperado_tamanhoProduto);
@@ -176,7 +179,39 @@ public class HomePageTests extends BaseTests {
 		assertEquals(Funcoes.removeCifraoDevolveDouble(carrinhoPage.obter_totalTaxExclTotal()), esperado_totalTaxExclTotal);
 		assertEquals(Funcoes.removeCifraoDevolveDouble(carrinhoPage.obter_totalTaxIncTotal()), esperado_totalTaxIncTotal);
 		assertEquals(Funcoes.removeCifraoDevolveDouble(carrinhoPage.obter_taxasTotal()), esperado_taxasTotal);
+		*/
 		
+	}
+	
+	@Test
+	public void testIrParaCheckout_FreteMeioPagamentoEnderecoListadosOk() {
+		//Produto disponível no carrinho de compras
+		testIrParaCarrinho_InformacoesPersistidas();
+		
+		//Teste
+		//Clicar no botão
+		checkoutPage = carrinhoPage.clicarBotaoProceedToCheckout();
+		
+		//Preencher informações
+		
+		//Validar informações na tela
+		assertThat(Funcoes.removeCifraoDevolveDouble(checkoutPage.obter_totalTaxIncTotal()), is(esperado_totalTaxIncTotal));
+//		assertThat(Funcoes.removeInformacoesAdicionasDevolveString(checkoutPage.obter_nomeCliente()), is(nomeCliente));
+		assertTrue(checkoutPage.obter_nomeCliente().startsWith(nomeCliente));
+		
+		checkoutPage.clicarBotaoContinueAddress();
+		
+		assertThat(Double.parseDouble(Funcoes.removeTexto(checkoutPage.obter_valorFrete(), "$", " tax excl.")), is(esperado_freteTotal));
+		
+		checkoutPage.clicarBotaoContinueShipping();
+		
+		//Selecionar opção "Pay By Check"
+		checkoutPage.selecionarRadioPayByCheck();
+		//Validar valor do cheque (amount)
+		assertThat(Double.parseDouble(Funcoes.removeTexto(checkoutPage.obter_amountPayByCheck(), "$", " (tax incl.)")), is(esperado_totalTaxIncTotal));
+		//Clicar na opção "I agree"
+		checkoutPage.selecionarCheckboxIAgree();
+		checkoutPage.checkboxIAgreeSelecionado();
 	}
 
 }
