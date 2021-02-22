@@ -9,7 +9,6 @@ import org.openqa.selenium.chrome.ChromeDriver;
 
 import io.cucumber.java.After;
 import io.cucumber.java.Before;
-import io.cucumber.java.pt.Dado;
 import io.cucumber.java.pt.Entao;
 import io.cucumber.java.pt.Quando;
 import pages.HomePage;
@@ -29,12 +28,6 @@ public class VisualizaProdutosSteps {
 	@After
 	public static void finalizar() {
 		driver.quit();
-	}
-	
-	@Dado("que estou na pagina inicial")
-	public void que_estou_na_pagina_inicial() {
-		homePage.carregarPaginaIncial();
-		assertThat(homePage.obterTituloPagina(), is("Loja de Teste"));
 	}
 
 	@Quando("nao estou logado")
