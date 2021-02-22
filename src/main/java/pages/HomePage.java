@@ -71,4 +71,16 @@ public class HomePage {
 		driver.findElement(botaoSignOut).click();
 	}
 
+	public void carregarPaginaIncial() {
+		driver.get("https://marcelodebittencourt.com/demoprestashop/");
+	}
+
+	public String obterTituloPagina() {
+		return driver.getTitle();
+	}
+
+	public boolean naoEstaLogado() {
+		return "Sign in".contentEquals(driver.findElement(usuarioLogado).getText());
+	}
+
 }

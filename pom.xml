@@ -5,11 +5,12 @@
 	<groupId>br.com.liandro</groupId>
 	<artifactId>ecommerce_pretashop</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	
+
 	<properties>
 		<junit.version>5.7.0</junit.version>
 		<hamcrest.version>2.2</hamcrest.version>
 		<selenium.version>3.141.59</selenium.version>
+		<cucumber.version>6.10.0</cucumber.version>
 	</properties>
 
 	<dependencies>
@@ -35,6 +36,21 @@
 			<groupId>org.seleniumhq.selenium</groupId>
 			<artifactId>selenium-java</artifactId>
 			<version>${selenium.version}</version>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/io.cucumber/cucumber-java -->
+		<dependency>
+			<groupId>io.cucumber</groupId>
+			<artifactId>cucumber-java</artifactId>
+			<version>${cucumber.version}</version>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/io.cucumber/cucumber-junit -->
+		<dependency>
+			<groupId>io.cucumber</groupId>
+			<artifactId>cucumber-junit</artifactId>
+			<version>${cucumber.version}</version>
+			<scope>test</scope>
 		</dependency>
 
 	</dependencies>
